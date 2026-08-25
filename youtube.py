@@ -16,6 +16,14 @@ import sys
 import os
 import time
 
+# Garante suporte a UTF-8 no Windows
+if sys.platform == "win32":
+    try:
+        sys.stdout.reconfigure(encoding="utf-8")
+        sys.stderr.reconfigure(encoding="utf-8")
+    except Exception:
+        pass
+
 try:
     import yt_dlp
 except ImportError:
@@ -23,13 +31,18 @@ except ImportError:
     print("   Instale com: pip install yt-dlp")
     sys.exit(1)
 
+try:
+    import imageio_ffmpeg
+    FFMPEG_PATH = imageio_ffmpeg.get_ffmpeg_exe()
+except Exception:
+    FFMPEG_PATH = None
+
 
 # ── Configurações ────────────────────────────────────────────────────────────
 
 ARQUIVO_LINKS   = "link_youtube.txt"       # arquivo padrão com as URLs
 PASTA_SAIDA     = "downloads"       # pasta onde os vídeos serão salvos
-FORMATO         = "best"   # melhor qualidade disponível
-# Para forçar MP4: "bestvideo[ext=mp4]+bestaudio[ext=m4a]/best[ext=mp4]"
+FORMATO         = "bestvideo[ext=mp4]+bestaudio[ext=m4a]/bestvideo+bestaudio/best"   # melhor qualidade disponível
 
 # ── Helpers ──────────────────────────────────────────────────────────────────
 
@@ -77,6 +90,8 @@ def baixar(url: str, indice: int, total: int) -> bool:
         "no_warnings":      True,
         "merge_output_format": "mp4",   # junta vídeo+áudio em .mp4
     }
+    if FFMPEG_PATH:
+        opcoes["ffmpeg_location"] = FFMPEG_PATH
 
     try:
         with yt_dlp.YoutubeDL(opcoes) as ydl:
