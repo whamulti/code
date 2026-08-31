@@ -27,7 +27,7 @@ except ImportError:
 # ── Configurações ────────────────────────────────────────────────────────────
 
 ARQUIVO_LINKS   = "link_drive.txt"  # arquivo padrão com as URLs
-PASTA_SAIDA     = "downloads"       # pasta onde os vídeos serão salvos
+PASTA_SAIDA     = r"C:\Users\Ricardo\Videos"    # pasta onde os vídeos serão salvos
 FORMATO         = "best"            # melhor qualidade disponível
 
 # ── Helpers ──────────────────────────────────────────────────────────────────
